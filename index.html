@@ -1,0 +1,182 @@
+<html>
+  <body>
+    <svg
+      id="svg1"
+      width="400px"
+      height="400px"
+      xmlns="http://www.w3.org/2000/svg"
+    ></svg>
+    <svg
+      id="svg2"
+      width="400px"
+      height="400px"
+      xmlns="http://www.w3.org/2000/svg"
+    ></svg>
+    <svg
+      id="svg3"
+      width="400px"
+      height="400px"
+      xmlns="http://www.w3.org/2000/svg"
+    ></svg>
+    <script>
+      let xmlns = "http://www.w3.org/2000/svg";
+
+      function createCircle(r) {
+        let c = document.createElementNS(xmlns, "circle");
+        c.setAttributeNS(null, "stroke", "white");
+        c.setAttributeNS(null, "stroke-width", "1");
+        c.setAttributeNS(null, "r", r || "5");
+        return c;
+      }
+      {
+        let svg = document.getElementById("svg1");
+        svg.style.backgroundColor = "#666666";
+        let mh = document.createElementNS(xmlns, "g");
+        svg.appendChild(mh);
+
+        let mm = document.createElementNS(xmlns, "g");
+        svg.appendChild(mm);
+
+        let minutes = [];
+        let hours = [];
+
+        for (let i = 0; i < 12; i++) {
+          let sin = Math.sin((Math.PI / 6) * i);
+          let cos = Math.cos((Math.PI / 6) * i);
+
+          let h = createCircle(10);
+          h.setAttributeNS(null, "cx", 200 + 50 * sin);
+          h.setAttributeNS(null, "cy", 200 - 50 * cos);
+          hours.push(h);
+
+          for (let j = 0; j < 5; j++) {
+            let c = createCircle();
+            c.setAttributeNS(null, "cx", 200 + (70 + j * 15) * sin);
+            c.setAttributeNS(null, "cy", 200 - (70 + j * 15) * cos);
+            minutes.push(c);
+          }
+        }
+
+        minutes.forEach(m => mm.appendChild(m));
+        hours.forEach(h => mh.appendChild(h));
+
+        setInterval(() => {
+          let date = new Date();
+          minutes.forEach((m, i) => m.setAttributeNS(null, "fill", "black"));
+          hours.forEach((h, i) => h.setAttributeNS(null, "fill", "black"));
+
+          minutes.forEach((m, i) => {
+            if (date.getSeconds() % 60 == i) {
+              m.setAttributeNS(null, "fill", "green");
+            }
+          });
+
+          minutes.forEach((m, i) => {
+            if (date.getMinutes() % 60 == i) {
+              m.setAttributeNS(null, "fill", "red");
+            }
+          });
+
+          hours.forEach((h, i) => {
+            if (date.getHours() % 12 == i) {
+              h.setAttributeNS(null, "fill", "blue");
+            }
+          });
+        }, 100);
+      }
+
+      {
+        let svg = document.getElementById("svg2");
+        svg.style.backgroundColor = "#666666";
+        let mm = document.createElementNS(xmlns, "g");
+        svg.appendChild(mm);
+        let minutes = [];
+
+        for (let i = 0; i < 60; i++) {
+          let sin = Math.sin((Math.PI / 30) * i);
+          let cos = Math.cos((Math.PI / 30) * i);
+          let c = createCircle(7);
+          c.setAttributeNS(null, "cx", 200 + 150 * sin);
+          c.setAttributeNS(null, "cy", 200 - 150 * cos);
+          minutes.push(c);
+        }
+
+        minutes.forEach(m => mm.appendChild(m));
+
+        setInterval(() => {
+          let date = new Date();
+          minutes.forEach((m, i) => {
+            let r = 0;
+            let g = 0;
+            let b = 0;
+
+            if (date.getSeconds() % 60 == i) g = 255;
+            if (date.getMinutes() % 60 == i) r = 255;
+            if (date.getHours() % 12 == Math.floor(i / 5)) b = 255;
+
+            m.setAttributeNS(null, "fill", `rgb(${r},${g},${b})`);
+          });
+        }, 100);
+      }
+
+      {
+        let svg = document.getElementById("svg3");
+        svg.style.backgroundColor = "#666666";
+        let mh = document.createElementNS(xmlns, "g");
+        svg.appendChild(mh);
+
+        let mm = document.createElementNS(xmlns, "g");
+        svg.appendChild(mm);
+
+        let minutes = [];
+
+        for (let i = 0; i < 12; i++) {
+          let sin = Math.sin((Math.PI / 6) * i);
+          let cos = Math.cos((Math.PI / 6) * i);
+
+          let h = createCircle(10);
+          h.setAttributeNS(null, "cx", 200 + 50 * sin);
+          h.setAttributeNS(null, "cy", 200 - 50 * cos);
+          minutes.push(h);
+
+          for (let j = 1; j < 5; j++) {
+            let c = createCircle();
+            c.setAttributeNS(
+              null,
+              "cx",
+              200 +
+                (70 + (j - 1) * 15) *
+                  Math.sin((Math.PI / 30) * (i * 5 + j * 1.2))
+            );
+            c.setAttributeNS(
+              null,
+              "cy",
+              200 -
+                (70 + (j - 1) * 15) *
+                  Math.cos((Math.PI / 30) * (i * 5 + j * 1.2))
+            );
+            minutes.push(c);
+          }
+        }
+
+        minutes.forEach(m => mm.appendChild(m));
+
+        setInterval(() => {
+          let date = new Date();
+          minutes.forEach((m, i) => {
+            let r = 0;
+            let g = 0;
+            let b = 0;
+
+            if (date.getSeconds() % 60 == i) g = 255;
+            if (date.getMinutes() % 60 == i) r = 255;
+            if (date.getHours() % 12 == Math.floor(i / 5) && (date.getMinutes() / 12 >= i % 5)) b = 255;
+
+            m.setAttributeNS(null, "fill", `rgb(${r},${g},${b})`);
+          });
+
+        }, 100);
+      }
+    </script>
+  </body>
+</html>
